@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
@@ -15,27 +12,22 @@ public class EnemyController : MonoBehaviour
     private Rigidbody2D _enemyBody;
     
     // Start is called before the first frame update
-    void Start() {
+    private void Start() {
         _enemyBody = GetComponent<Rigidbody2D>();
         _originalX = transform.position.x;
         ComputeVelocity();
     }
 
-    void ComputeVelocity() {
-        _velocity = new Vector2((_direction) * maxOffset / enemyPatrolTime, 0);
+    private void ComputeVelocity() {
+        _velocity = new Vector2(_direction * maxOffset / enemyPatrolTime, 0);
     }
 
-    void MoveEnemy() {
+    private void MoveEnemy() {
         _enemyBody.MovePosition(_enemyBody.position + _velocity * Time.fixedDeltaTime);
     }
+    
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    void FixedUpdate() {
+    private void FixedUpdate() {
         if (Mathf.Abs(_enemyBody.position.x - _originalX) < maxOffset) {
             MoveEnemy();
         }

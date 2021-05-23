@@ -1,8 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Vector2 = UnityEngine.Vector2;
 
 public class PlayerController : MonoBehaviour {
     public float speed;
@@ -10,47 +8,45 @@ public class PlayerController : MonoBehaviour {
     public float maxSpeed;
     public float linearDrag;
     public float gravity;
-
-    private bool _onGroundState = true;
-    private SpriteRenderer _marioSprite;
-    private Rigidbody2D _marioBody;
-    private bool _faceRightState = true;
-    
     public Transform enemyLocation;
     public Text scoreText;
-    private int _score = 0;
-    private bool _countScoreState = false;
+    public Button startButton;
+    private SpriteRenderer _marioSprite;
+    private Rigidbody2D _marioBody;
+    private int _score;
+    private bool _countScoreState;
 
-    
+    private bool _onGroundState = true;
+    private bool _faceRightState = true;
     
     // Start is called before the first frame update
-    void Start() {
+    private void Start() {
         Application.targetFrameRate = 30;
         _marioBody = GetComponent<Rigidbody2D>();
         _marioSprite = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
-    void Update() {
+    private void Update() {
         if (!_onGroundState && _countScoreState) {
             if (Mathf.Abs(transform.position.x - enemyLocation.position.x) < 0.5f) {
                 _countScoreState = false;
                 _score++;
-                Debug.Log(_score);
             }
         }
     }
 
-    void FixedUpdate() {
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        MoveMario(moveHorizontal);
+    private void FixedUpdate() {
+        var moveHorizontal = Input.GetAxis("Horizontal");
+        var marioVelocity = _marioBody.velocity;
+        MoveMario(moveHorizontal, marioVelocity);
         
         if (Input.GetKeyDown("space") && _onGroundState) {
             Jump();
             _countScoreState = true;
         }
         
-        ModifyDrag(moveHorizontal);
+        ModifyDrag(moveHorizontal, marioVelocity);
     }
     
     private void Jump() {
@@ -58,28 +54,28 @@ public class PlayerController : MonoBehaviour {
         _onGroundState = false;
     }
 
-    private void MoveMario(float moveHorizontal) {
+    private void MoveMario(float moveHorizontal, Vector2 marioVelocity) {
         // move by add force
-        Vector2 movement = new Vector2(moveHorizontal, 0);
+        var movement = new Vector2(moveHorizontal, 0);
         _marioBody.AddForce(movement * speed);
         
         // change sprite looking direction
         if (moveHorizontal < 0 && _faceRightState) {
             _faceRightState = false;
             _marioSprite.flipX = true;
-        }else if(moveHorizontal > 0 && !_faceRightState) {
+        }else if (moveHorizontal > 0 && !_faceRightState) {
             _faceRightState = true;
             _marioSprite.flipX = false;
         }
         
         // set max speed 
-        if (Mathf.Abs(_marioBody.velocity.x) > maxSpeed) {
-            _marioBody.velocity = new Vector2(Mathf.Sign(_marioBody.velocity.x) * maxSpeed, _marioBody.velocity.y);
+        if (Mathf.Abs(marioVelocity.x) > maxSpeed) {
+            _marioBody.velocity = new Vector2(Mathf.Sign(marioVelocity.x) * maxSpeed, marioVelocity.y);
         }
     }
 
-    private void ModifyDrag(float moveHorizontal) {
-        bool changingDirections = (moveHorizontal > 0 && _marioBody.velocity.x < 0) ||  (moveHorizontal < 0 && _marioBody.velocity.x > 0);
+    private void ModifyDrag(float moveHorizontal, Vector2 marioVelocity) {
+        var changingDirections = moveHorizontal > 0 && marioVelocity.x < 0 ||  moveHorizontal < 0 && marioVelocity.x > 0;
 
         if(_onGroundState) {
             if(Mathf.Abs(moveHorizontal) < 0.4f || changingDirections){
@@ -100,14 +96,17 @@ public class PlayerController : MonoBehaviour {
         if (col.gameObject.CompareTag("Ground")) {
             _onGroundState = true;
             _countScoreState = false;
-            scoreText.text = "Score: " + _score.ToString();
+            scoreText.text = "Score: " + _score;
         }
             
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
         if (other.gameObject.CompareTag("Enemy")) {
-            Debug.Log("Collided with Gomba!");
+            Debug.Log("Collided with Goomba!");
+            Time.timeScale = 0.0f;
+            startButton.gameObject.SetActive(true);
         }
     }
+
 }
