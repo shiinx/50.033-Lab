@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        var moveHorizontal = Input.GetAxis("Horizontal");
+        var moveHorizontal = Input.GetAxisRaw("Horizontal");
         var marioVelocity = _marioBody.velocity;
         MoveMario(moveHorizontal, marioVelocity);
         
@@ -54,12 +54,14 @@ public class PlayerController : MonoBehaviour {
             Jump();
             _countScoreState = true;
         }
-        ModifyDrag(moveHorizontal, marioVelocity);
+        ModifyPhysics(moveHorizontal, marioVelocity);
     }
     
     private void Jump() {
-        _marioBody.AddForce(Vector2.up * upSpeed, ForceMode2D.Impulse);
         _onGroundState = false;
+        _marioBody.gravityScale = gravity;
+        _marioBody.drag = linearDrag * 0.15f;
+        _marioBody.AddForce(Vector2.up * upSpeed, ForceMode2D.Impulse);
         _marioAnimator.SetBool("onGround", _onGroundState);
     }
 
@@ -90,7 +92,7 @@ public class PlayerController : MonoBehaviour {
         _marioAnimator.SetFloat("xSpeed", Mathf.Abs(moveHorizontal));
     }
 
-    private void ModifyDrag(float moveHorizontal, Vector2 marioVelocity) {
+    private void ModifyPhysics(float moveHorizontal, Vector2 marioVelocity) {
         var changingDirections = moveHorizontal > 0 && marioVelocity.x < 0 ||  moveHorizontal < 0 && marioVelocity.x > 0;
 
         if(_onGroundState) {
@@ -108,26 +110,28 @@ public class PlayerController : MonoBehaviour {
         
     }
     
-    private void OnCollisionEnter2D(Collision2D col) {
-        Vector2 dir = col.GetContact(0).normal;
+    private void OnCollisionEnter2D(Collision2D other) {
+        Vector2 dir = other.GetContact(0).normal;
         if (dir != Vector2.up) return;
-        if (col.gameObject.CompareTag("Ground") || col.gameObject.CompareTag("Platform") || col.gameObject.CompareTag("Brick")) {
+        if (other.gameObject.CompareTag("Ground") || other.gameObject.CompareTag("Platform") || other.gameObject.CompareTag("Brick")) {
             _onGroundState = true;
             _marioAnimator.SetBool("onGround", _onGroundState);
             _countScoreState = false;
             scoreText.text = "Score: " + _score;
         }
+        print(_onGroundState);
             
     }
     
-    private void OnCollisionExit2D(Collision2D col) {
-        if (col.gameObject.CompareTag("Brick") || col.gameObject.CompareTag("Platform")) {
+    private void OnCollisionExit2D(Collision2D other) {
+        if (other.gameObject.CompareTag("Brick") || other.gameObject.CompareTag("Platform")) {
             _onGroundState = false;
         }
+        print(_onGroundState);
     }
 
-    private void OnTriggerEnter2D(Collider2D col) {
-        if (col.gameObject.CompareTag("Enemy")) {
+    private void OnTriggerEnter2D(Collider2D other) {
+        if (other.gameObject.CompareTag("Enemy")) {
             Debug.Log("Collided with Goomba!");
             Time.timeScale = 0.0f;
             startButton.gameObject.SetActive(true);

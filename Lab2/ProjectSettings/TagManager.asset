@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Platform
   - Brick
+  - Obstacles
   layers:
   - Default
   - TransparentFX
@@ -15,9 +16,9 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
+  - QuestionBox
+  - Brick
+  - Spawned
   - 
   - 
   - 
