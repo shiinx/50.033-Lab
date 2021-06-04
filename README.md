@@ -6,12 +6,16 @@
 ## Lab 1 Final State Recording Submission
 ![Lab1 demo](/Lab1/SubmissionStuff/Lab1.gif)
 
+## Lab 2 Final State Recording Submission
+https://user-images.githubusercontent.com/10007666/120780275-82f8bd00-c55a-11eb-9a80-24e910e99907.mp4
 
-Credits for Parallax background
+
+## Credits
+Parallax background:  
 https://ansimuz.itch.io/industrial-parallax-background
 
-Tutorial helps
+Tutorial helps:  
 https://pressstart.vip/tutorials/2019/10/1/103/character-running-and-movement.html
 
-Physics helps
+Physics helps:  
 https://github.com/Unity-Technologies/PhysicsExamples2D
