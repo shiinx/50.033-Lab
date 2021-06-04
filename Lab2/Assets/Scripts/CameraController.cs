@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -19,8 +17,8 @@ public class CameraController : MonoBehaviour
         Vector3 bottomLeft =  Camera.main.ViewportToWorldPoint(new  Vector3(0, 0, 0));
         _viewportHalfWidth  =  Mathf.Abs(bottomLeft.x  -  this.transform.position.x);
 
-        _offset  =  this.transform.position.x  -  player.position.x;
-        _startX  =  this.transform.position.x;
+        _offset  =  transform.position.x  -  player.position.x;
+        _startX  =  transform.position.x;
         _endX  =  endLimit.transform.position.x  -  _viewportHalfWidth;
     }
 
@@ -30,6 +28,6 @@ public class CameraController : MonoBehaviour
         float desiredX =  player.position.x  +  _offset;
         // check if desiredX is within startX and endX
         if (desiredX  >  _startX  &&  desiredX  <  _endX)
-            this.transform.position  =  new  Vector3(desiredX, this.transform.position.y, this.transform.position.z);
+            transform.position  =  new  Vector3(desiredX, transform.position.y, transform.position.z);
     }
 }

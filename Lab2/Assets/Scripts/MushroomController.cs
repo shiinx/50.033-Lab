@@ -1,18 +1,16 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MushroomController : MonoBehaviour {
     public float speed;
-    private Rigidbody2D _mushroomBody;
-    private bool _onGround;
 
     private bool _collidedWPlayer;
 
-    private bool _movingRight= true;
-
     private bool _launched = false;
+
+    private bool _movingRight = true;
+    private Rigidbody2D _mushroomBody;
+    private bool _onGround;
+
     // Start is called before the first frame update
     void Start() {
         _mushroomBody = GetComponent<Rigidbody2D>();
@@ -28,6 +26,10 @@ public class MushroomController : MonoBehaviour {
         _mushroomBody.velocity = velocity;
     }
 
+    private void OnBecameInvisible() {
+        Destroy(gameObject);
+    }
+
 
     private void OnCollisionEnter2D(Collision2D other) {
         if (!_collidedWPlayer && other.gameObject.CompareTag("Player")) {
@@ -36,14 +38,11 @@ public class MushroomController : MonoBehaviour {
             _mushroomBody.velocity = Vector2.zero;
             return;
         }
+
         var dir = other.GetContact(0).normal;
         if (dir == Vector2.up) return;
         if (other.gameObject.CompareTag("Obstacles")) {
             _movingRight = !_movingRight;
         }
-    }
-
-    private void OnBecameInvisible() {
-        Destroy(gameObject);
     }
 }

@@ -1,16 +1,15 @@
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
-{
-    private float _originalX;
+public class EnemyController : MonoBehaviour {
     public float maxOffset;
     public float enemyPatrolTime;
 
     private int _direction = 1;
-    private Vector2 _velocity;
 
     private Rigidbody2D _enemyBody;
-    
+    private float _originalX;
+    private Vector2 _velocity;
+
     // Start is called before the first frame update
     private void Start() {
         _enemyBody = GetComponent<Rigidbody2D>();
@@ -18,14 +17,6 @@ public class EnemyController : MonoBehaviour
         ComputeVelocity();
     }
 
-    private void ComputeVelocity() {
-        _velocity = new Vector2(_direction * maxOffset / enemyPatrolTime, 0);
-    }
-
-    private void MoveEnemy() {
-        _enemyBody.MovePosition(_enemyBody.position + _velocity * Time.fixedDeltaTime);
-    }
-    
 
     private void FixedUpdate() {
         if (Mathf.Abs(_enemyBody.position.x - _originalX) < maxOffset) {
@@ -36,5 +27,13 @@ public class EnemyController : MonoBehaviour
             ComputeVelocity();
             MoveEnemy();
         }
+    }
+
+    private void ComputeVelocity() {
+        _velocity = new Vector2(_direction * maxOffset / enemyPatrolTime, 0);
+    }
+
+    private void MoveEnemy() {
+        _enemyBody.MovePosition(_enemyBody.position + _velocity * Time.fixedDeltaTime);
     }
 }
