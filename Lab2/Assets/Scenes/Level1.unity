@@ -458,8 +458,34 @@ PrefabInstance:
       propertyPath: enemyLocation
       value: 
       objectReference: {fileID: 6822292238408370784}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1143388513258475557, guid: debed75440206024d95babc29144ecf8, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: debed75440206024d95babc29144ecf8, type: 3}
+--- !u!1 &1143388513084761314 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1143388513258475553, guid: debed75440206024d95babc29144ecf8, type: 3}
+  m_PrefabInstance: {fileID: 1143388513084761313}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1143388513084761315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1143388513084761314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c093b7ebf694f9faa05da64fc10caf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 100
+  upSpeed: 50
+  maxSpeed: 7
+  linearDrag: 10
+  gravity: 5
+  enemyLocation: {fileID: 6822292238408370784}
+  scoreText: {fileID: 712718938}
+  startButton: {fileID: 773181178}
 --- !u!1001 &3701356549948200788
 PrefabInstance:
   m_ObjectHideFlags: 0

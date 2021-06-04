@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 812429621758967528}
   - component: {fileID: 7273784887228145087}
   - component: {fileID: 7211979915274636353}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: ConsumableMushroomSimple
   m_TagString: Untagged
   m_Icon: {fileID: 0}

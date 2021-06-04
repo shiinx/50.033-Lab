@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 537587643289757416}
   - component: {fileID: 537587643289757418}
   - component: {fileID: 537587643289757419}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: TopCollider
-  m_TagString: Brick
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -225,7 +225,7 @@ SpringJoint2D:
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
   m_ConnectedAnchor: {x: 0.007999897, y: -0.15600002}
-  m_AutoConfigureDistance: 0
+  m_AutoConfigureDistance: 1
   m_Distance: 0.005
   m_DampingRatio: 1
   m_Frequency: 3

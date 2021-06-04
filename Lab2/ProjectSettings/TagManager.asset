@@ -17,13 +17,13 @@ TagManager:
   - Water
   - UI
   - QuestionBox
-  - Brick
   - Spawned
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Camera
+  - bg4
+  - bg3
+  - bg2
+  - bg1
+  - bg
   - 
   - 
   - 
@@ -45,4 +45,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: BG
+    uniqueID: 1156436045
     locked: 0

@@ -1,9 +1,8 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Vector2 = UnityEngine.Vector2;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController1 : MonoBehaviour {
     public float speed;
     public float upSpeed;
     public float maxSpeed;
@@ -14,11 +13,8 @@ public class PlayerController : MonoBehaviour {
     public Button startButton;
     private SpriteRenderer _marioSprite;
     private Rigidbody2D _marioBody;
-    private Animator _marioAnimator;
-    private AudioSource _marioAudio;
     private int _score;
     private bool _countScoreState;
-    private string _sceneName;
 
     private bool _onGroundState = true;
     private bool _faceRightState = true;
@@ -28,25 +24,20 @@ public class PlayerController : MonoBehaviour {
         Application.targetFrameRate = 30;
         _marioBody = GetComponent<Rigidbody2D>();
         _marioSprite = GetComponent<SpriteRenderer>();
-        _marioAnimator = GetComponent<Animator>();
-        _marioAudio = GetComponent<AudioSource>();
-        _sceneName = SceneManager.GetActiveScene().name;
     }
 
     // Update is called once per frame
     private void Update() {
-        if (_sceneName == "Level1") {
-            if (!_onGroundState && _countScoreState) {
-                if (Mathf.Abs(transform.position.x - enemyLocation.position.x) < 0.5f) {
-                    _countScoreState = false;
-                    _score++;
-                }
-            }    
+        if (!_onGroundState && _countScoreState) {
+            if (Mathf.Abs(transform.position.x - enemyLocation.position.x) < 0.5f) {
+                _countScoreState = false;
+                _score++;
+            }
         }
     }
 
     private void FixedUpdate() {
-        var moveHorizontal = Input.GetAxisRaw("Horizontal");
+        var moveHorizontal = Input.GetAxis("Horizontal");
         var marioVelocity = _marioBody.velocity;
         MoveMario(moveHorizontal, marioVelocity);
         
@@ -54,15 +45,13 @@ public class PlayerController : MonoBehaviour {
             Jump();
             _countScoreState = true;
         }
-        ModifyPhysics(moveHorizontal, marioVelocity);
+        
+        ModifyDrag(moveHorizontal, marioVelocity);
     }
     
     private void Jump() {
-        _onGroundState = false;
-        _marioBody.gravityScale = gravity;
-        _marioBody.drag = linearDrag * 0.15f;
         _marioBody.AddForce(Vector2.up * upSpeed, ForceMode2D.Impulse);
-        _marioAnimator.SetBool("onGround", _onGroundState);
+        _onGroundState = false;
     }
 
     private void MoveMario(float moveHorizontal, Vector2 marioVelocity) {
@@ -74,25 +63,18 @@ public class PlayerController : MonoBehaviour {
         if (moveHorizontal < 0 && _faceRightState) {
             _faceRightState = false;
             _marioSprite.flipX = true;
-            if (Mathf.Abs(_marioBody.velocity.x) > 1.0 && _onGroundState) {
-                _marioAnimator.SetTrigger("onSkid");
-            }
         }else if (moveHorizontal > 0 && !_faceRightState) {
             _faceRightState = true;
             _marioSprite.flipX = false;
-            if (Mathf.Abs(_marioBody.velocity.x ) > 1.0 && _onGroundState) {
-                _marioAnimator.SetTrigger("onSkid");
-            }
         }
         
         // set max speed 
         if (Mathf.Abs(marioVelocity.x) > maxSpeed) {
             _marioBody.velocity = new Vector2(Mathf.Sign(marioVelocity.x) * maxSpeed, marioVelocity.y);
         }
-        _marioAnimator.SetFloat("xSpeed", Mathf.Abs(moveHorizontal));
     }
 
-    private void ModifyPhysics(float moveHorizontal, Vector2 marioVelocity) {
+    private void ModifyDrag(float moveHorizontal, Vector2 marioVelocity) {
         var changingDirections = moveHorizontal > 0 && marioVelocity.x < 0 ||  moveHorizontal < 0 && marioVelocity.x > 0;
 
         if(_onGroundState) {
@@ -110,24 +92,13 @@ public class PlayerController : MonoBehaviour {
         
     }
     
-    private void OnCollisionEnter2D(Collision2D other) {
-        Vector2 dir = other.GetContact(0).normal;
-        if (dir != Vector2.up) return;
-        if (other.gameObject.CompareTag("Ground") || other.gameObject.CompareTag("Platform") || other.gameObject.CompareTag("Brick")) {
+    private void OnCollisionEnter2D(Collision2D col) {
+        if (col.gameObject.CompareTag("Ground")) {
             _onGroundState = true;
-            _marioAnimator.SetBool("onGround", _onGroundState);
             _countScoreState = false;
             scoreText.text = "Score: " + _score;
         }
-        print(_onGroundState);
             
-    }
-    
-    private void OnCollisionExit2D(Collision2D other) {
-        if (other.gameObject.CompareTag("Brick") || other.gameObject.CompareTag("Platform")) {
-            _onGroundState = false;
-        }
-        print(_onGroundState);
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
@@ -136,10 +107,6 @@ public class PlayerController : MonoBehaviour {
             Time.timeScale = 0.0f;
             startButton.gameObject.SetActive(true);
         }
-    }
-
-    private void PlayJumpSound() {
-        _marioAudio.PlayOneShot(_marioAudio.clip);
     }
 
 }
